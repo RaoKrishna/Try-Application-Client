@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <base href="/" />
+    <title><%- htmlWebpackPlugin.options.title || 'Try application'%></title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+
+
+    <!--[if lt IE 9]>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.js"></script>
+    <![endif]-->
+
+    <% for (var css in htmlWebpackPlugin.files.css) { %>
+    <link href="<%- htmlWebpackPlugin.files.css[css] %>" rel="stylesheet">
+    <% } %>
+
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+
+</head>
+<body>
+<div id="app"></div>
+
+<% for (var chunk in htmlWebpackPlugin.files.chunks) { %>
+<script type="text/javascript" src="<%= htmlWebpackPlugin.files.chunks[chunk].entry %>"></script>
+<% } %>
+
+<meta name="google-signin-client_id" content="868027264248-4uh3q5om3opnl4ajmijlusmmlhkn18lc.apps.googleusercontent.com" />
+
+</body>
+</html>

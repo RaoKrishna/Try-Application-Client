@@ -1,0 +1,329 @@
+body {
+    background-color: lightgray;
+    margin: 0 15%;
+}
+
+/* #mainblock {
+    margin-left: 1%;
+    margin-right: 1%;
+    margin-top: 0%;
+}
+
+.jumbotron {
+    max-height: 10%;
+    margin-left: 12%;
+    margin-bottom: 0%;
+    font-family: Georgia, serif;
+    font-size: 300%;
+    background-color: #ebf4fb;
+    padding-top: 3%;
+    padding-bottom: 3%;
+    color: #2c699a;
+}
+
+img {
+    width: 10%;
+    height: 126.3px;
+    float: left;
+    line-height: 1%;
+}
+
+.navbar-default {
+    background-color: #0b274d;
+    margin-bottom: 0%;
+    border-style: hidden;
+    border-radius: 0px;
+    line-height: 40px;
+    height: 40px;
+    min-height: 0px;
+}
+
+.navbar-default nav{
+    width: 100%;
+}
+
+.navbar-default .nav li {
+    border-right: 1px solid #204b6e;
+    width: 150px;
+    float: left;
+}
+
+.navbar-default .nav li a{
+    color: white;
+    align-content: center;
+    padding: 0% 0% 15% 25%;
+    line-height: 40px;
+    height: 40px;
+    min-height: 0px;
+    cursor: pointer;
+}
+
+.productTable {
+    width: 50%;
+    margin: 2% 2%;
+}
+
+.productTable tr td {
+    padding-bottom: 2%;
+}
+
+.label {
+    color: #2c699a;
+    font-size: medium;
+    font-weight: normal;
+}
+
+input {
+    width: 100%;
+    /*padding: 1px 1px;
+    line-height: 25px;
+    border: 1px solid #53a0df;
+}
+
+.table {
+    margin-bottom: 0%;
+}
+
+th, td {
+    color: #2c699a;
+}
+
+.summaryTable {
+    margin: 2% 2%;
+    width: 50%;
+}
+
+.summaryTable tr th, td {
+    padding-bottom: 2%;
+}
+
+.summaryTable tr th {
+    font-weight: bold;
+    text-decoration: underline;
+    color: #2c699a;
+}
+
+.btn {
+    background-color: #2fa4e7;
+    color: #ffffff;
+    margin-left: 10%;
+    margin-right: 10%;
+    width: 30%;
+}
+
+#logout {
+    border: 0;
+    border-right-width: 0;
+}
+
+.loginbox {
+    border: 1px solid #2c699a;
+    width: 30%;
+    margin: 5% 30% 1%;
+}
+
+.loginTable, .registertable {
+    width: 90%;
+    margin: 2% 2%;
+}
+
+.loginTable, .registertable tr td {
+    padding-bottom: 1%;
+    padding-top: 1%;
+}
+
+.loginTable tr:last-child td:last-child {
+    padding-left: 10%;
+}
+
+.loginTable tr:last-child td:last-child button{
+    width: 50%;
+}
+
+.register {
+    margin-left: 40%;
+    margin-right: 35%;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.registeruser {
+    width: 40%;
+    margin: 5% 10% 1%;
+}
+
+.unauth {
+    margin: 5% 30% 1%;
+    padding: 1% 1%;
+}
+
+.unauth p {
+    font-weight: bold;
+}
+
+.unauth a {
+    cursor: pointer;
+    text-decoration: underline;
+} */
+
+.main-content {
+    width: 100%;
+    background-color: #ffffff;
+}
+
+.login-content {
+    width: 100%;
+    height: 60vh;
+    background-color: #ffffff;
+}
+
+.header {
+    background: black;
+    color: white;
+    height: 50px;
+    width: 100%;
+    //padding-top: 10px;
+
+    p {
+        margin: 1% 1%;
+        font-size: large;
+        float: left;
+    }
+
+    .application-name {
+        margin-left: 15%;
+        float: left;
+    }
+
+    label {
+        float: left;
+        margin-left: 25%;
+        font-size: large;
+        margin-top: 1%;
+        cursor: pointer;
+        text-decoration: underline;
+    }
+}
+
+.google-sign-in {
+    border-color: black;
+    width: 20%;
+    position: absolute;
+    margin-top: 10%;
+    left: 40%;
+    height: 40px;
+    font-size: large;
+    cursor: pointer;
+}
+
+.login-error {
+    position: absolute;
+    margin-top: 15%;
+    left: 40%;
+    font-size: large;
+    color: red;
+    font-family: sans-serif;
+}
+
+.studentTable {
+    width: 100%;
+    margin: 2% 1%;
+}
+
+.studentTable tr td:first-child {
+    padding-bottom: 2%;
+    width: 25%;
+}
+
+.studentTable tr td:nth-child(2) {
+    padding-bottom: 2%;
+        width: 75%;
+    }
+
+.label {
+    color: black;
+    font-size: large;
+    font-weight: normal;
+}
+
+.dropdown {
+    width: 30%;
+    height: 30px;
+    font-size: medium;
+}
+
+ul {
+    padding-left: 0;
+    margin: 0;
+
+    li {
+        list-style-type: none;
+        color: blue;
+        padding-bottom: 5px;
+        font-size: large;
+    }
+}
+
+.button {
+    display: block;
+    border: 1px solid black;
+    height: 25px;
+    padding-left: 2%;
+    width: 23%;
+    padding-top: 1%;
+    padding-right: 0;
+    background-color: buttonface;
+    cursor: pointer;
+}
+
+.file-upload {
+    padding-left: 15%;
+}
+
+.file-upload-error {
+    color: red;
+}
+
+.submitted-files-box {
+    border: 1px solid black;
+    padding: 1%;
+    width: 80%;
+    p {
+        font-size: large;
+        margin: 0;
+        margin-bottom: 1%;
+    }
+
+    li {
+        color: black;
+    }
+}
+
+.submit-btn-td {
+    padding-left: 15%;
+}
+
+.submit-btn {
+    display: block;
+    border: 1px solid black;
+    height: 30px;
+    width: 20%;
+    padding-left: 0;
+    padding-top: 0;
+    font-size: medium;
+    background-color: buttonface;
+    cursor: pointer;
+}
+
+.submit-btn:disabled {
+    display: block;
+    border: 1px solid black;
+    height: 30px;
+    width: 20%;
+    padding-left: 0;
+    padding-top: 0;
+    font-size: medium;
+    background-color: darkgray;
+    cursor: not-allowed;
+}
+
