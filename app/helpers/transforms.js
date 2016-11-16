@@ -1,5 +1,6 @@
 import axios from 'axios';
 import * as localStorage from './localStorage';
+import history from '../../app/index'
 
 export function setTransform(token) {
   axios.defaults.transformRequest.push(function(data, headers) {
@@ -15,13 +16,13 @@ export function setupInterceptors() {
       return response;
     },
     function(error) {
-      if(error.status === 401) {
+      if(error.response.status == 401) {
         localStorage.clear();
-        window.location = '/login';
+        history.push('/login');
       } else if (error.status === 403) {
-        //window.location = '/error/unauthorized';
+
       } else {
-        //window.location = '/error/internal-error';
+        return Promise.reject(error);
       }
     }
   );

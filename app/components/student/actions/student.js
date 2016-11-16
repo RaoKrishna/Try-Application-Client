@@ -2,6 +2,7 @@ import axios from 'axios';
 import {
     SET_LOADING,
     FILE_FORMATS,
+    SET_ERROR,
     MANDATORY_FILES,
     SET_SUCCESS_MSG,
     POPULATE_COURSES,
@@ -15,7 +16,7 @@ import * as localStorage from '../../../helpers/localStorage';
 
 export function fetchInstructors() {
     return dispatch => {
-        axios.get(`https://ec2-35-163-206-61.us-west-2.compute.amazonaws.com:5000/student/instructors/`)
+        axios.get(`https://localhost:5000/student/instructors/`)
             .then(function(response) {
                 console.log('Instrcutors: ', response.data);
                 dispatch({
@@ -27,7 +28,10 @@ export function fetchInstructors() {
                     loading: false
                 })
             }).catch(function(err) {
-            console.log('Error is => ', err);
+                dispatch({
+                    type: SET_ERROR,
+                    errorMessage: JSON.parse(err.response.data).errorMessage
+                })
         })
     }
 }
@@ -35,7 +39,7 @@ export function fetchInstructors() {
 export function fetchCourses(instructorId) {
     console.log('Fetching courses');
     return dispatch => {
-        axios.get(`https://ec2-35-163-206-61.us-west-2.compute.amazonaws.com:5000/student/${instructorId}/courses/`)
+        axios.get(`https://localhost:5000/student/${instructorId}/courses/`)
             .then(function(response) {
                 console.log('Courses: ', response.data);
                 dispatch({
@@ -47,14 +51,17 @@ export function fetchCourses(instructorId) {
                     loading: false
                 })
             }).catch(function(err) {
-                console.log('Error is => ', err);
+                dispatch({
+                    type: SET_ERROR,
+                    errorMessage: JSON.parse(err.response.data).errorMessage
+                })
             })
     }
 }
 
 export function fetchAssignments(instructorId, courseId) {
     return dispatch => {
-        axios.get(`https://ec2-35-163-206-61.us-west-2.compute.amazonaws.com:5000/student/${instructorId}/${courseId}/assignments/`)
+        axios.get(`https://localhost:5000/student/${instructorId}/${courseId}/assignments/`)
             .then(function(response) {
                 console.log('Assignments: ', response.data);
                 dispatch({
@@ -66,14 +73,17 @@ export function fetchAssignments(instructorId, courseId) {
                     loading: false
                 })
             }).catch(function(err) {
-            console.log('Error is => ', err);
+                dispatch({
+                    type: SET_ERROR,
+                    errorMessage: JSON.parse(err.response.data).errorMessage
+                })
         })
     }
 }
 
 export function fetchFileFormats(instructorId, courseId, assignmentId) {
     return dispatch => {
-        axios.get(`https://ec2-35-163-206-61.us-west-2.compute.amazonaws.com:5000/student/${instructorId}/${courseId}/${assignmentId}/fileformat/`)
+        axios.get(`https://localhost:5000/student/${instructorId}/${courseId}/${assignmentId}/fileformat/`)
             .then(function(response) {
                 var formats = response.data;
                 console.log(formats);
@@ -129,58 +139,71 @@ export function fetchFileFormats(instructorId, courseId, assignmentId) {
                         files: ""
                     })
                 }
-            }).catch(function(err) {
-            console.log('Error is => ', err);
+            })
+            .catch(function(err) {
+                dispatch({
+                    type: SET_ERROR,
+                    errorMessage: JSON.parse(err.response.data).errorMessage
+                })
         })
     }
 }
 
 export function submitAssignment(student) {
     return dispatch => {
-        console.log('submitting: ', student);
-        var promises = [];
-        for(var i = 0; i < student.file.length; i++) {
-            let req = new XMLHttpRequest();
-            let file = new FormData();
-            file.append('file', student.file[i]);
-            file.append('fieldname', 'upl');
-            req.open('POST', `https://ec2-35-163-206-61.us-west-2.compute.amazonaws.com:5000/student/submission/${student.instructorId}/${student.courseId}/${student.assignmentId}/`);
-            let auth = localStorage.get('auth') || {};
-            if (auth.token) {
-             req.setRequestHeader('Authorization', ('Bearer ' + auth.token));
-             }
-            req.send(file);
-            req.addEventListener('readystatechange', function () {
-                if (this.readyState === 4) {
-                    promises.push(Promise.resolve(1));
-                    console.log('Doneee: ', req.status)
-                    dispatch({
-                        type: SET_SUCCESS_MSG,
-                        message: 'Files uploaded successfully. Running scripts...'
-                    })
+        try {
+            console.log('submitting: ', student);
+            var promises = [];
+            for (var i = 0; i < student.file.length; i++) {
+                let req = new XMLHttpRequest();
+                let file = new FormData();
+                file.append('file', student.file[i]);
+                file.append('fieldname', 'upl');
+                req.open('POST', `https://localhost:5000/student/submission/${student.instructorId}/${student.courseId}/${student.assignmentId}/`);
+                let auth = localStorage.get('auth') || {};
+                if (auth.token) {
+                    req.setRequestHeader('Authorization', ('Bearer ' + auth.token));
                 }
-            });
-        }
-        var interval = setInterval(intt, 100);
-        function intt() {
-            Promise.all(promises).then(value => {
-                console.log(value);
-                axios.get(`https://ec2-35-163-206-61.us-west-2.compute.amazonaws.com:5000/student/submission/${student.instructorId}/${student.courseId}/${student.assignmentId}/runScript/`)
-                    .then(function(response) {
-                        console.log('Output: ', response.data);
+                req.send(file);
+                req.addEventListener('readystatechange', function () {
+                    if (this.readyState === 4) {
+                        promises.push(Promise.resolve(1));
+                        console.log('Doneee: ', req.status)
                         dispatch({
-                            type: SET_SCRIPTS_RESPONSE,
-                            response: response.data
-                        });
-                    }).catch(function(err) {
-                    console.log('Error is => ', err);
-                })
-                clearInterval(interval);
-            }, reason => {
-                console.log(reason)
-            });
-        }
+                            type: SET_SUCCESS_MSG,
+                            message: 'Files uploaded successfully. Running scripts...'
+                        })
+                    }
+                });
+            }
+            var interval = setInterval(intt, 100);
 
-        //console.log(promises);
+            function intt() {
+                Promise.all(promises).then(value => {
+                    console.log(value);
+                    axios.get(`https://localhost:5000/student/submission/${student.instructorId}/${student.courseId}/${student.assignmentId}/runScript/`)
+                        .then(function (response) {
+                            console.log('Output: ', response.data);
+                            dispatch({
+                                type: SET_SCRIPTS_RESPONSE,
+                                response: response.data
+                            });
+                        }).catch(function (err) {
+                        dispatch({
+                            type: SET_ERROR,
+                            errorMessage: JSON.parse(err.response.data).errorMessage
+                        })
+                    })
+                    clearInterval(interval);
+                }, reason => {
+                    console.log(reason)
+                });
+            }
+        } catch (err) {
+            dispatch({
+                type: SET_ERROR,
+                errorMessage: JSON.parse(err.response.data).errorMessage
+            })
+        }
     }
 }

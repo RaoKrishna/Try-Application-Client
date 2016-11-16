@@ -7,11 +7,21 @@ import {
     fetchInstructors
 } from '../actions/student';
 import {
+    SET_ERROR,
     SET_COURSE,
     SET_LOADING,
+    UPLOAD_FILE,
+    FILE_FORMATS,
     SET_ASSIGNMENT,
+    DISABLE_SUBMIT,
     SET_INSTRUCTOR,
-    POPULATE_ASSIGNMENTS
+    MANDATORY_FILES,
+    SET_SUCCESS_MSG,
+    FILE_FORMAT_BLOCK,
+    POPULATE_ASSIGNMENTS,
+    SET_SCRIPTS_RESPONSE,
+    FILE_EXTENSION_ERROR_MSG,
+    MANDATORY_FILES_ERROR_MSG
 } from '../../../helpers/constants';
 import FileUpload from '../../common/FileUpload';
 import Header from '../../../components/common/Header';
@@ -32,11 +42,64 @@ export default class Student extends Component {
         this.props.dispatch(fetchInstructors());
     }
 
+    resetValues() {
+        this.props.dispatch({
+            type: SET_ERROR,
+            errorMessage: ''
+        });
+        this.props.dispatch({
+            type: FILE_FORMAT_BLOCK,
+            show: false
+        });
+        this.props.dispatch({
+            type: FILE_FORMATS,
+            formats: ""
+        });
+        this.props.dispatch({
+            type: MANDATORY_FILES,
+            files: ""
+        });
+        this.props.dispatch({
+            type: UPLOAD_FILE,
+            file: []
+        });
+        this.props.dispatch({
+            type: MANDATORY_FILES_ERROR_MSG,
+            message: ''
+        });
+        this.props.dispatch({
+            type: FILE_EXTENSION_ERROR_MSG,
+            message: ''
+        });
+        this.props.dispatch({
+            type: DISABLE_SUBMIT,
+            disable: true
+        });
+        this.props.dispatch({
+            type: SET_SCRIPTS_RESPONSE,
+            scriptsResponse: ''
+        });
+        this.props.dispatch({
+            type: SET_SUCCESS_MSG,
+            message: ''
+        });
+    }
+
     changeInstructor(e) {
+
         this.props.dispatch({
             type: SET_INSTRUCTOR,
             instructor: e.target.value
         });
+        this.props.dispatch({
+            type: SET_COURSE,
+            course: ''
+        });
+        this.props.dispatch({
+            type: SET_ASSIGNMENT,
+            assignment: ''
+        });
+        this.resetValues();
 
         if(e.target.value != "default") {
             this.props.dispatch({
@@ -54,10 +117,16 @@ export default class Student extends Component {
     }
 
     changeCourses(e) {
+
         this.props.dispatch({
             type: SET_COURSE,
             course: e.target.value
         });
+        this.props.dispatch({
+            type: SET_ASSIGNMENT,
+            assignment: ''
+        });
+        this.resetValues();
 
         if(e.target.value != "default") {
             this.props.dispatch({
@@ -76,10 +145,13 @@ export default class Student extends Component {
     }
 
     changeAssignment(e) {
+
         this.props.dispatch({
             type: SET_ASSIGNMENT,
             assignment: e.target.value
         });
+        this.resetValues();
+
 
         if(e.target.value != "default") {
             this.props.dispatch({
@@ -107,11 +179,18 @@ export default class Student extends Component {
         let assignments = this.props.student.assignments && this.props.student.assignments.map((assignment) => {
                 return <option key={assignment} value={assignment}>{assignment}</option>
             });
+        let instructorId = this.props.student.instructorId || '';
+        let courseId = this.props.student.courseId || '';
+        let assignmentId = this.props.student.assignmentId || '';
         let successMsg = this.props.student.successMsg;
         let showFileFormatBlock = this.props.student.showFileFormatBlock;
         let uploadFileFormats = this.props.student.uploadFileFormats || '';
         let mandatoryFiles = this.props.student.mandatoryFiles || '';
-        let disableSubmit = this.props.student.disableSubmit;
+        let errorMessage = this.props.student.errorMessage || '';
+        console.log("Error msg is : " + errorMessage);
+        let disableSubmit = this.props.student.disableSubmit || errorMessage != ''
+            || instructorId == '' || courseId == ''
+            || assignmentId == '';
         let fileExtensionErrorMsg = this.props.student.fileExtensionErrorMsg || '';
         let mandatoryFileErrorMsg = this.props.student.mandatoryFileErrorMsg || '';
         let fileFormatListElements = this.props.student.fileFormatMessage &&
@@ -142,6 +221,15 @@ export default class Student extends Component {
                 );
             });
         }
+        if(errorMessage != '') {
+            errorMessage = errorMessage.split("\n").map((response) => {
+                return (
+                    <li>
+                        {response}
+                    </li>
+                );
+            });
+        }
 
         return (
             <div className="main-content">
@@ -153,7 +241,8 @@ export default class Student extends Component {
                             <label className="label">Select the instructor: </label>
                         </td>
                         <td>
-                            <select onChange={this.changeInstructor.bind(this)} className="dropdown">
+                            <select onChange={this.changeInstructor.bind(this)} className="dropdown"
+                                    value={instructorId == '' ? "default" : instructorId} >
                                 <option key="default" value="default">Select an instructor</option>
                                 {instructors}
                             </select>
@@ -164,7 +253,8 @@ export default class Student extends Component {
                             <label className="label">Select the course: </label>
                         </td>
                         <td>
-                            <select onChange={this.changeCourses.bind(this)} className="dropdown">
+                            <select onChange={this.changeCourses.bind(this)} className="dropdown"
+                                    value={courseId == '' ? "default" : courseId}>
                                 <option key="default" value="default">Select a course</option>
                                 {courses}
                             </select>
@@ -175,7 +265,8 @@ export default class Student extends Component {
                             <label className="label">Select the assignment: </label>
                         </td>
                         <td>
-                            <select onChange={(e) => this.changeAssignment(e)} className="dropdown">
+                            <select onChange={(e) => this.changeAssignment(e)} className="dropdown"
+                                    value={assignmentId == '' ? "default" : assignmentId}>
                                 <option key="default" value="default">Select an assignment</option>
                                 {assignments}
                             </select>
@@ -250,6 +341,19 @@ export default class Student extends Component {
                                         {scriptsResponse}
                                     </ul>
                                 </div>
+                            }
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colSpan="2">
+                            {
+                                errorMessage != '' &&
+                                    <div className="submitted-files-box">
+                                        <ul>
+                                            {errorMessage}
+                                        </ul>
+                                    </div>
                             }
 
                         </td>

@@ -2,6 +2,7 @@ import {
     SET_COURSE,
     UPLOAD_FILE,
     FILE_FORMATS,
+    SET_ERROR,
     SET_ASSIGNMENT,
     SET_INSTRUCTOR,
     DISABLE_SUBMIT,
@@ -73,7 +74,11 @@ const actionHandlers = {
     }),
     [SET_SCRIPTS_RESPONSE]: (state, action) => ({
         scriptsResponse: action.response
+    }),
+    [SET_ERROR]: (state, action) => ({
+        errorMessage: action.errorMessage,
+        disableSubmit: true
     })
-};
+ };
 
 export default createReducer(initialState, actionHandlers);
