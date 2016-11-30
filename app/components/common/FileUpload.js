@@ -114,11 +114,12 @@ export default class FileUpload extends Component {
             }, '');
             formats = formats.slice(0, formats.length - 1);
         }
+        console.log("Disable upload: ", this.props.disabled);
 
         return (
             <div className="file-upload">
-                <label className="button"> Click to upload files
-                    <input type="file" multiple onChange={(file) => this.selectFiles(file)} accept={formats} hidden/>
+                <label className={this.props.disabled ? "disable-button" : "button"} disabled={this.props.disabled}> Click to upload files
+                    <input type="file" multiple onChange={(file) => this.selectFiles(file)} accept={formats} hidden disabled={this.props.disabled} />
                 </label>
             </div>
         )

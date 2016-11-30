@@ -1,8 +1,9 @@
 import axios from 'axios';
 import {
+    SET_ERROR,
     SET_LOADING,
     FILE_FORMATS,
-    SET_ERROR,
+    PAST_DUE_DATE,
     MANDATORY_FILES,
     SET_SUCCESS_MSG,
     POPULATE_COURSES,
@@ -16,7 +17,7 @@ import * as localStorage from '../../../helpers/localStorage';
 
 export function fetchInstructors() {
     return dispatch => {
-        axios.get(`https://ec2-35-160-31-143.us-west-2.compute.amazonaws.com:5000/student/instructors/`)
+        axios.get(`https://localhost:5000/student/instructors/`)
             .then(function(response) {
                 console.log('Instrcutors: ', response.data);
                 dispatch({
@@ -39,7 +40,7 @@ export function fetchInstructors() {
 export function fetchCourses(instructorId) {
     console.log('Fetching courses');
     return dispatch => {
-        axios.get(`https://ec2-35-160-31-143.us-west-2.compute.amazonaws.com:5000/student/${instructorId}/courses/`)
+        axios.get(`https://localhost:5000/student/${instructorId}/courses/`)
             .then(function(response) {
                 console.log('Courses: ', response.data);
                 dispatch({
@@ -61,7 +62,7 @@ export function fetchCourses(instructorId) {
 
 export function fetchAssignments(instructorId, courseId) {
     return dispatch => {
-        axios.get(`https://ec2-35-160-31-143.us-west-2.compute.amazonaws.com:5000/student/${instructorId}/${courseId}/assignments/`)
+        axios.get(`https://localhost:5000/student/${instructorId}/${courseId}/assignments/`)
             .then(function(response) {
                 console.log('Assignments: ', response.data);
                 dispatch({
@@ -83,18 +84,19 @@ export function fetchAssignments(instructorId, courseId) {
 
 export function fetchFileFormats(instructorId, courseId, assignmentId) {
     return dispatch => {
-        axios.get(`https://ec2-35-160-31-143.us-west-2.compute.amazonaws.com:5000/student/${instructorId}/${courseId}/${assignmentId}/fileformat/`)
+        axios.get(`https://localhost:5000/student/${instructorId}/${courseId}/${assignmentId}/fileformat/`)
             .then(function(response) {
-                var formats = response.data;
-                console.log(formats);
-                if(formats.length != 0) {
+                var response = response.data;
+                console.log(response);
+                if(!response.cannotAccept) {
+                    if (response.data.length != 0) {
 
-                    dispatch({
-                        type: FILE_FORMAT_BLOCK,
-                        show: true
-                    });
+                        dispatch({
+                            type: FILE_FORMAT_BLOCK,
+                            show: true
+                        });
 
-                    var message = formats.reduce((msg, format) => {
+                        var message = response.data.reduce((msg, format) => {
                             if (format.trim().indexOf("Restricted") == 0) {
                                 format = format.substring(format.indexOf(":") + 1, format.length);
                                 msg += "You can only submit files having following extensions: " + format + ".\n";
@@ -113,31 +115,37 @@ export function fetchFileFormats(instructorId, courseId, assignmentId) {
                                     files: format
                                 })
                             }
-                        return msg;
-                    }, '');
+                            return msg;
+                        }, '');
 
-                    console.log("in action: " + message);
+                        console.log("in action: " + message);
 
-                    dispatch({
-                        type: FILE_FORMAT_BLOCK_MSG,
-                        message: message
-                    });
+                        dispatch({
+                            type: FILE_FORMAT_BLOCK_MSG,
+                            message: message
+                        });
 
+                    } else {
+                        dispatch({
+                            type: FILE_FORMAT_BLOCK,
+                            show: false
+                        });
+
+                        dispatch({
+                            type: FILE_FORMATS,
+                            formats: ""
+                        });
+
+                        dispatch({
+                            type: MANDATORY_FILES,
+                            files: ""
+                        })
+                    }
                 } else {
                     dispatch({
-                        type: FILE_FORMAT_BLOCK,
-                        show: false
+                        type: PAST_DUE_DATE,
+                        pastDueDate: true
                     });
-
-                    dispatch({
-                        type: FILE_FORMATS,
-                        formats: ""
-                    });
-
-                    dispatch({
-                        type: MANDATORY_FILES,
-                        files: ""
-                    })
                 }
             })
             .catch(function(err) {
@@ -159,7 +167,7 @@ export function submitAssignment(student) {
                 let file = new FormData();
                 file.append('file', student.file[i]);
                 file.append('fieldname', 'upl');
-                req.open('POST', `https://ec2-35-160-31-143.us-west-2.compute.amazonaws.com:5000/student/submission/${student.instructorId}/${student.courseId}/${student.assignmentId}/`);
+                req.open('POST', `https://localhost:5000/student/submission/${student.instructorId}/${student.courseId}/${student.assignmentId}/`);
                 let auth = localStorage.get('auth') || {};
                 if (auth.token) {
                     req.setRequestHeader('Authorization', ('Bearer ' + auth.token));
@@ -181,7 +189,7 @@ export function submitAssignment(student) {
             function intt() {
                 Promise.all(promises).then(value => {
                     console.log(value);
-                    axios.get(`https://ec2-35-160-31-143.us-west-2.compute.amazonaws.com:5000/student/submission/${student.instructorId}/${student.courseId}/${student.assignmentId}/runScript/`)
+                    axios.get(`https://localhost:5000/student/submission/${student.instructorId}/${student.courseId}/${student.assignmentId}/runScript/`)
                         .then(function (response) {
                             console.log('Output: ', response.data);
                             dispatch({

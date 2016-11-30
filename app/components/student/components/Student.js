@@ -12,12 +12,14 @@ import {
     SET_LOADING,
     UPLOAD_FILE,
     FILE_FORMATS,
+    PAST_DUE_DATE,
     SET_ASSIGNMENT,
     DISABLE_SUBMIT,
     SET_INSTRUCTOR,
     MANDATORY_FILES,
     SET_SUCCESS_MSG,
     FILE_FORMAT_BLOCK,
+    DISABLE_UPLOAD_FILE,
     POPULATE_ASSIGNMENTS,
     SET_SCRIPTS_RESPONSE,
     FILE_EXTENSION_ERROR_MSG,
@@ -82,6 +84,14 @@ export default class Student extends Component {
         this.props.dispatch({
             type: SET_SUCCESS_MSG,
             message: ''
+        });
+        this.props.dispatch({
+            type: PAST_DUE_DATE,
+            pastDueDate: false
+        });
+        this.props.dispatch({
+            type: DISABLE_UPLOAD_FILE,
+            disableUploadFile: true
         });
     }
 
@@ -158,13 +168,16 @@ export default class Student extends Component {
                 type: SET_LOADING,
                 loading: true
             });
+            this.props.dispatch({
+                type: DISABLE_UPLOAD_FILE,
+                disableUploadFile: false
+            });
             let instructorId = this.props.student.instructorId;
             let courseId = this.props.student.courseId;
             let assignmentId = e.target.value;
             this.props.dispatch(fetchFileFormats(instructorId, courseId, assignmentId));
         } else {
             // disable the upload button here
-
         }
     }
 
@@ -187,7 +200,6 @@ export default class Student extends Component {
         let uploadFileFormats = this.props.student.uploadFileFormats || '';
         let mandatoryFiles = this.props.student.mandatoryFiles || '';
         let errorMessage = this.props.student.errorMessage || '';
-        console.log("Error msg is : " + errorMessage);
         let disableSubmit = this.props.student.disableSubmit || errorMessage != ''
             || instructorId == '' || courseId == ''
             || assignmentId == '';
@@ -230,6 +242,9 @@ export default class Student extends Component {
                 );
             });
         }
+
+        let pastDueDate = this.props.student.pastDueDate || false;
+        let disableUploadFile = this.props.student.disableUploadFile;
 
         return (
             <div className="main-content">
@@ -291,6 +306,7 @@ export default class Student extends Component {
                             <FileUpload dispatch={this.props.dispatch}
                                         fileFormats={uploadFileFormats}
                                         mandatoryFiles={mandatoryFiles}
+                                        disabled={disableUploadFile}
                             />
                         </td>
                     </tr>
@@ -307,6 +323,16 @@ export default class Student extends Component {
                                         fileExtensionErrorMsg != "" &&
                                         <li className="file-upload-error">{fileExtensionErrorMsg}</li>
                                     }
+                                </ul>
+                            </td>
+                        </tr>
+                    }
+                    {
+                        pastDueDate &&
+                        <tr>
+                            <td colSpan="2">
+                                <ul>
+                                    <li className="file-upload-error">Due date has passed. You cannot submit now!</li>
                                 </ul>
                             </td>
                         </tr>

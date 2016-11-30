@@ -11,7 +11,7 @@ export function loginUser(token) {
     return dispatch => {
         axios.get('https://localhost:5000/')
             .then(function(response, err) {
-                axios.post('https://ec2-35-160-31-143.us-west-2.compute.amazonaws.com:5000/login/', {
+                axios.post('https://localhost:5000/login/', {
                     token: token
                 }).then(function(response, err) {
                     console.log("After post: ", response);

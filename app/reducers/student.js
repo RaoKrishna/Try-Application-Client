@@ -1,8 +1,9 @@
 import {
+    SET_ERROR,
     SET_COURSE,
     UPLOAD_FILE,
     FILE_FORMATS,
-    SET_ERROR,
+    PAST_DUE_DATE,
     SET_ASSIGNMENT,
     SET_INSTRUCTOR,
     DISABLE_SUBMIT,
@@ -10,6 +11,7 @@ import {
     SET_SUCCESS_MSG,
     POPULATE_COURSES,
     FILE_FORMAT_BLOCK,
+    DISABLE_UPLOAD_FILE,
     POPULATE_ASSIGNMENTS,
     POPULATE_INSTRUCTORS,
     SET_SCRIPTS_RESPONSE,
@@ -23,7 +25,8 @@ const initialState = {
     successMsg: '',
     showFileFormatBlock: false,
     disableSubmit: true,
-    scriptsResponse: ''
+    scriptsResponse: '',
+    disableUploadFile: true
 };
 
 const actionHandlers = {
@@ -78,6 +81,12 @@ const actionHandlers = {
     [SET_ERROR]: (state, action) => ({
         errorMessage: action.errorMessage,
         disableSubmit: true
+    }),
+    [PAST_DUE_DATE]: (state, action) => ({
+        pastDueDate: action.pastDueDate
+    }),
+    [DISABLE_UPLOAD_FILE]: (state, action) => ({
+        disableUploadFile: action.disableUploadFile
     })
  };
 

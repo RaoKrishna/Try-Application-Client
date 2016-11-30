@@ -274,6 +274,7 @@ ul {
     padding-right: 0;
     background-color: buttonface;
     cursor: pointer;
+    color: black;
 }
 
 .file-upload {
@@ -327,3 +328,15 @@ ul {
     cursor: not-allowed;
 }
 
+.disable-button {
+    display: block;
+    border: 1px solid black;
+    height: 25px;
+    padding-left: 2%;
+    width: 23%;
+    padding-top: 1%;
+    padding-right: 0;
+    background-color: darkgray;
+    cursor: not-allowed;
+    color: gray;
+}
