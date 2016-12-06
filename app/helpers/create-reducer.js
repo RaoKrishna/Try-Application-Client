@@ -1,5 +1,9 @@
 import {CLEAR_MESSAGES} from './constants';
 
+/*
+* This function combines all the reducers and creates new
+* state on each action invocation.
+*/
 export default function createReducer(initialState, actionHandlers) {
     return (state = initialState, action) => {
         if (action.type === CLEAR_MESSAGES) {

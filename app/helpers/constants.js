@@ -22,3 +22,4 @@ export const CLEAR_MESSAGES = 'CLEAR_MESSAGES';
 export const SET_ERROR = '';
 export const PAST_DUE_DATE = 'PAST_DUE_DATE';
 export const DISABLE_UPLOAD_FILE = 'DISABLE_UPLOAD_FILE';
+export const DISABLE_INPUTS = 'DISABLE_INPUTS';

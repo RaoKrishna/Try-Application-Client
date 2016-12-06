@@ -7,6 +7,7 @@ import {
     SET_ASSIGNMENT,
     SET_INSTRUCTOR,
     DISABLE_SUBMIT,
+    DISABLE_INPUTS,
     MANDATORY_FILES,
     SET_SUCCESS_MSG,
     POPULATE_COURSES,
@@ -87,6 +88,14 @@ const actionHandlers = {
     }),
     [DISABLE_UPLOAD_FILE]: (state, action) => ({
         disableUploadFile: action.disableUploadFile
+    }),
+    [DISABLE_INPUTS]: (state, action) => ({
+        disableSubmit: true,
+        disableUploadFile: true,
+        disableInstructor: true,
+        disableCourse: true,
+        disableAssignment: true,
+        showResetMessage: true
     })
  };
 

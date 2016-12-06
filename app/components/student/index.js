@@ -1,7 +1,7 @@
 import Student from './components/Student';
 
 module.exports = {
-    path: 'student',
+    path: 'submission',
     getComponent(location, cb) {
         require.ensure([], (require) => {
             cb(null, Student);

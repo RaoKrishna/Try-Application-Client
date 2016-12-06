@@ -26,7 +26,7 @@ export function loginUser(token) {
                         setTransform(token);
                         setupInterceptors();
                         window.setTimeout(() => {
-                            history.push('/student');
+                            history.push('/submission');
                         }, 1000)
                     }
                 }).catch(function(err) {

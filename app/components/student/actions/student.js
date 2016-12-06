@@ -4,6 +4,7 @@ import {
     SET_LOADING,
     FILE_FORMATS,
     PAST_DUE_DATE,
+    DISABLE_INPUTS,
     MANDATORY_FILES,
     SET_SUCCESS_MSG,
     POPULATE_COURSES,
@@ -146,6 +147,9 @@ export function fetchFileFormats(instructorId, courseId, assignmentId) {
                         type: PAST_DUE_DATE,
                         pastDueDate: true
                     });
+                    dispatch({
+                        type: DISABLE_INPUTS,
+                    });
                 }
             })
             .catch(function(err) {
@@ -153,6 +157,9 @@ export function fetchFileFormats(instructorId, courseId, assignmentId) {
                     type: SET_ERROR,
                     errorMessage: JSON.parse(err.response.data).errorMessage
                 })
+                dispatch({
+                    type: DISABLE_INPUTS,
+                });
         })
     }
 }
@@ -176,7 +183,7 @@ export function submitAssignment(student) {
                 req.addEventListener('readystatechange', function () {
                     if (this.readyState === 4) {
                         promises.push(Promise.resolve(1));
-                        console.log('Doneee: ', req.status)
+                        console.log('Doneee: ', req.status);
                         dispatch({
                             type: SET_SUCCESS_MSG,
                             message: 'Files uploaded successfully. Running scripts...'
@@ -184,28 +191,37 @@ export function submitAssignment(student) {
                     }
                 });
             }
-            var interval = setInterval(intt, 100);
 
-            function intt() {
-                Promise.all(promises).then(value => {
-                    console.log(value);
-                    axios.get(`https://localhost:5000/student/submission/${student.instructorId}/${student.courseId}/${student.assignmentId}/runScript/`)
-                        .then(function (response) {
-                            console.log('Output: ', response.data);
+            var interval = setInterval(runScript, 100);
+
+            function runScript() {
+                if(promises.length == student.file.length) {
+                    Promise.all(promises).then(value => {
+                        console.log('Calling now: ', promises.length);
+                        axios.get(`https://localhost:5000/student/submission/${student.instructorId}/${student.courseId}/${student.assignmentId}/runScript/`)
+                            .then(function (response) {
+                                console.log('Output: ', response.data);
+                                dispatch({
+                                    type: SET_SCRIPTS_RESPONSE,
+                                    response: response.data
+                                });
+                                dispatch({
+                                    type: DISABLE_INPUTS,
+                                });
+                            }).catch(function (err) {
                             dispatch({
-                                type: SET_SCRIPTS_RESPONSE,
-                                response: response.data
+                                type: SET_ERROR,
+                                errorMessage: JSON.parse(err.response.data).errorMessage
                             });
-                        }).catch(function (err) {
-                        dispatch({
-                            type: SET_ERROR,
-                            errorMessage: JSON.parse(err.response.data).errorMessage
-                        })
-                    })
-                    clearInterval(interval);
-                }, reason => {
-                    console.log(reason)
-                });
+                            dispatch({
+                                type: DISABLE_INPUTS,
+                            });
+                        });
+                        clearInterval(interval);
+                    }, reason => {
+                        console.log(reason)
+                    });
+                }
             }
         } catch (err) {
             dispatch({

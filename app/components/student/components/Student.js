@@ -176,8 +176,6 @@ export default class Student extends Component {
             let courseId = this.props.student.courseId;
             let assignmentId = e.target.value;
             this.props.dispatch(fetchFileFormats(instructorId, courseId, assignmentId));
-        } else {
-            // disable the upload button here
         }
     }
 
@@ -245,6 +243,9 @@ export default class Student extends Component {
 
         let pastDueDate = this.props.student.pastDueDate || false;
         let disableUploadFile = this.props.student.disableUploadFile;
+        let disableInstructor = this.props.student.disableInstructor || false;
+        let disableCourse = this.props.student.disableCourse || false;
+        let disableAssignment = this.props.student.disableAssignment || false;
 
         return (
             <div className="main-content">
@@ -257,7 +258,7 @@ export default class Student extends Component {
                         </td>
                         <td>
                             <select onChange={this.changeInstructor.bind(this)} className="dropdown"
-                                    value={instructorId == '' ? "default" : instructorId} >
+                                    value={instructorId == '' ? "default" : instructorId} disabled={disableInstructor}>
                                 <option key="default" value="default">Select an instructor</option>
                                 {instructors}
                             </select>
@@ -269,7 +270,7 @@ export default class Student extends Component {
                         </td>
                         <td>
                             <select onChange={this.changeCourses.bind(this)} className="dropdown"
-                                    value={courseId == '' ? "default" : courseId}>
+                                    value={courseId == '' ? "default" : courseId} disabled={disableCourse}>
                                 <option key="default" value="default">Select a course</option>
                                 {courses}
                             </select>
@@ -281,7 +282,7 @@ export default class Student extends Component {
                         </td>
                         <td>
                             <select onChange={(e) => this.changeAssignment(e)} className="dropdown"
-                                    value={assignmentId == '' ? "default" : assignmentId}>
+                                    value={assignmentId == '' ? "default" : assignmentId} disabled={disableAssignment}>
                                 <option key="default" value="default">Select an assignment</option>
                                 {assignments}
                             </select>
@@ -378,6 +379,20 @@ export default class Student extends Component {
                                     <div className="submitted-files-box">
                                         <ul>
                                             {errorMessage}
+                                        </ul>
+                                    </div>
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colSpan="2">
+                            {
+                                this.props.student.showResetMessage &&
+                                    <div className="submitted-files-box">
+                                        <ul>
+                                            <li>
+                                                Please refresh the page for new submission or click Sign Out to close the application
+                                            </li>
                                         </ul>
                                     </div>
                             }

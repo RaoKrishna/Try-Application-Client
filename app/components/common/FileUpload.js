@@ -16,6 +16,13 @@ export default class FileUpload extends Component {
             message: ''
         });
 
+        this.props.dispatch({
+            type: UPLOAD_FILE,
+            file: []
+        });
+
+
+
         if(event.target.files.length > 0) {
 
             var canProceed = true;
