@@ -18,7 +18,6 @@ export default class Header extends Component {
     }
 
     render() {
-        console.log("Show sign  out = ", this.props.showSignOut);
         return (
             <div className="header">
                 <p>

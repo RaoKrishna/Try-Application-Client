@@ -33,7 +33,7 @@ export default class FileUpload extends Component {
                 for(var i = 0; i < event.target.files.length; i++) {
                     var name = event.target.files[i].name.trim();
                     var extension = name.substr(name.lastIndexOf('.'), name.length - name.lastIndexOf('.')).trim();
-                    console.log(extension);
+                    //console.log(extension);
 
                     filesAreValid = formats.reduce((isValid, file) => {
                         return (file.trim().indexOf(extension) != -1) && isValid
@@ -61,7 +61,7 @@ export default class FileUpload extends Component {
 
             if(this.props.mandatoryFiles != "") {
                 var mandatoryFiles = this.props.mandatoryFiles.split(",");
-                console.log(mandatoryFiles);
+                //console.log(mandatoryFiles);
                 var filesPresent = true;
                 filesPresent = mandatoryFiles.every((file) => {
                     console.log(file);
@@ -121,7 +121,7 @@ export default class FileUpload extends Component {
             }, '');
             formats = formats.slice(0, formats.length - 1);
         }
-        console.log("Disable upload: ", this.props.disabled);
+        //console.log("Disable upload: ", this.props.disabled);
 
         return (
             <div className="file-upload">

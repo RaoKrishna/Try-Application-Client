@@ -6,7 +6,6 @@ import {
     LOG_IN
 } from '../../../helpers/constants';
 
-// 129.21.83.109
 export function loginUser(token) {
     return dispatch => {
         axios.get('https://localhost:5000/')
@@ -24,6 +23,7 @@ export function loginUser(token) {
                             isAuthenticated: true
                         });
                         setTransform(token);
+                        console.log('token is: ', token);
                         setupInterceptors();
                         window.setTimeout(() => {
                             history.push('/submission');
